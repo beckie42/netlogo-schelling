@@ -7,7 +7,7 @@ people-own [
 ]
 
 globals [
-  partner
+  equilibrium?
 ]
 
 to setup
@@ -18,6 +18,7 @@ to setup
 end
 
 to go
+  if equilibrium? [stop]
   move-unhappy-people
   update-people
   tick
@@ -42,16 +43,21 @@ to update-people
     let neighbours (turtles-on neighbors)
     set similar (count neighbours with [color = matchcolor]) / (count neighbours) * 100.0
     ifelse similar >= %similar 
-      [ set happy? True ]
-      [ set happy? False ]
+      [ set happy? True 
+        set shape "face happy"]
+      [ set happy? False
+        set shape "face sad" ]
   ]
+  let unhappypeople people with [happy? = False]
+  ifelse all? unhappypeople [color = red] or all? unhappypeople [color = green]
+    [ set equilibrium? True ]
+    [ set equilibrium? False ]
 end
 
 to move-unhappy-people
   let unhappypeople people with [happy? = False]
   ask unhappypeople [
-    set partner one-of other unhappypeople
-    show partner
+    let partner one-of other unhappypeople
     let currentpos patch-here
     let newpos [patch-here] of partner
     move-to newpos
@@ -75,7 +81,7 @@ GRAPHICS-WINDOW
 1
 1
 0
-0
+1
 0
 1
 -2
@@ -131,17 +137,17 @@ SLIDER
 %similar
 0
 100
-50
+64
 1
 1
 NIL
 HORIZONTAL
 
 PLOT
-14
-238
-343
-388
+15
+257
+344
+407
 NIL
 time
 %
@@ -174,6 +180,17 @@ MONITOR
 188
 green people
 count people with [color = green]
+17
+1
+13
+
+MONITOR
+15
+195
+116
+248
+happy people
+count people with [happy? = True]
 17
 1
 13

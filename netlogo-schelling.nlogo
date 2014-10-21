@@ -2,6 +2,8 @@ breed [people person]
 
 people-own [
   resources
+  similar
+  happy?
 ]
 
 to setup
@@ -14,6 +16,7 @@ end
 to go
   move-unhappy-people
   update-people
+  tick
 end
 
 to setup-people
@@ -30,11 +33,19 @@ to setup-people
 end
   
 to update-people
-  
+  ask people [
+    let neighbours (turtles-on neighbors)
+    set similar (count neighbours with [color = [color] of self]) / (count neighbours) * 100
+    ifelse similar >= %similar 
+      [ set happy? True ]
+      [ set happy? False ]
+  ]
 end
 
 to move-unhappy-people
-  
+;  ask people [
+;    if not happy? [
+      
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -58,8 +69,8 @@ GRAPHICS-WINDOW
 4
 -4
 4
-0
-0
+1
+1
 1
 ticks
 30.0
@@ -97,6 +108,40 @@ NIL
 NIL
 NIL
 0
+
+SLIDER
+21
+72
+193
+105
+%similar
+%similar
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
+
+PLOT
+22
+190
+222
+340
+% happy people
+time
+% happy
+0.0
+10.0
+0.0
+100.0
+true
+false
+"" ""
+PENS
+"happy people" 1.0 0 -1184463 true "" "plot count people with [ happy? = True ]"
+"sad people" 1.0 0 -13345367 true "" "plot count people with [ happy? = False ]"
 
 @#$#@#$#@
 ## WHAT IS IT?

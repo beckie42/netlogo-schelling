@@ -65,15 +65,14 @@ to move-unhappy-people
   ]
 end
 
-
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
+428
 10
-455
-245
-5
-5
+829
+432
+10
+10
 18.7
 1
 10
@@ -84,10 +83,10 @@ GRAPHICS-WINDOW
 1
 0
 1
--5
-5
--5
-5
+-10
+10
+-10
+10
 1
 1
 1
@@ -118,7 +117,7 @@ BUTTON
 52
 NIL
 go
-NIL
+T
 1
 T
 OBSERVER
@@ -144,10 +143,10 @@ NIL
 HORIZONTAL
 
 PLOT
-15
-257
-344
-407
+10
+536
+339
+686
 NIL
 time
 %
@@ -183,6 +182,24 @@ count people with [happy? = True] / count people * 100
 2
 1
 13
+
+PLOT
+10
+370
+210
+520
+similarity of neighbours
+time
+% similar
+0.0
+10.0
+0.0
+100.0
+true
+false
+"" ""
+PENS
+"% similar" 1.0 0 -13345367 true "" "plot mean [similar] of people"
 
 @#$#@#$#@
 ## WHAT IS IT?

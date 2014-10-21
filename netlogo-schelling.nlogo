@@ -14,7 +14,9 @@ to setup
 end
 
 to go
-  move-unhappy-people
+  if any? people with [happy? = False]
+    [ show count people with [happy? = False]
+      move-unhappy-people ]
   update-people
   tick
 end
@@ -34,8 +36,9 @@ end
   
 to update-people
   ask people [
+    let matchcolor [color] of self
     let neighbours (turtles-on neighbors)
-    set similar (count neighbours with [color = [color] of self]) / (count neighbours) * 100
+    set similar (count neighbours with [color = matchcolor]) / (count neighbours) * 100.0
     ifelse similar >= %similar 
       [ set happy? True ]
       [ set happy? False ]
@@ -43,32 +46,48 @@ to update-people
 end
 
 to move-unhappy-people
-;  ask people [
-;    if not happy? [
-      
+  ask people [
+    if not happy? [
+      let unhappy-neighbours []
+      ask neighbors [
+        if all? turtles-on self [ happy? = False ] [
+          set unhappy-neighbours sentence unhappy-neighbours self
+        ]
+      ]
+      if length unhappy-neighbours > 0 [
+        let new_patch one-of unhappy-neighbours
+        ask turtles-on new_patch [
+          move-to patch-here
+        ]
+        move-to new_patch
+      ]
+    ]
+  
+]   
 end
+
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
 10
 455
-158
-4
-4
-13.0
+134
+2
+2
+18.7
 1
 10
 1
 1
 1
 0
+0
+0
 1
-1
-1
--4
-4
--4
-4
+-2
+2
+-2
+2
 1
 1
 1
@@ -99,7 +118,7 @@ BUTTON
 52
 NIL
 go
-T
+NIL
 1
 T
 OBSERVER
@@ -118,30 +137,52 @@ SLIDER
 %similar
 0
 100
-50
+22
 1
 1
 NIL
 HORIZONTAL
 
 PLOT
-22
-190
-222
-340
-% happy people
+14
+238
+343
+388
+NIL
 time
-% happy
+%
 0.0
 10.0
 0.0
 100.0
 true
-false
+true
 "" ""
 PENS
-"happy people" 1.0 0 -1184463 true "" "plot count people with [ happy? = True ]"
-"sad people" 1.0 0 -13345367 true "" "plot count people with [ happy? = False ]"
+"happy people" 1.0 0 -955883 true "" "plot count people with [ happy? = True ] / count people * 100"
+"sad people" 1.0 0 -13345367 true "" "plot count people with [ happy? = False ] / count people * 100"
+
+MONITOR
+16
+135
+99
+188
+red people
+count people with [color = red]
+17
+1
+13
+
+MONITOR
+104
+135
+204
+188
+green people
+count people with [color = green]
+17
+1
+13
 
 @#$#@#$#@
 ## WHAT IS IT?

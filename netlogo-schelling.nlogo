@@ -6,6 +6,10 @@ people-own [
   happy?
 ]
 
+globals [
+  partner
+]
+
 to setup
   clear-all
   setup-people
@@ -14,9 +18,7 @@ to setup
 end
 
 to go
-  if any? people with [happy? = False]
-    [ show count people with [happy? = False]
-      move-unhappy-people ]
+  move-unhappy-people
   update-people
   tick
 end
@@ -46,25 +48,17 @@ to update-people
 end
 
 to move-unhappy-people
-  ask people [
-    if not happy? [
-      let unhappy-neighbours []
-      ask neighbors [
-        if all? turtles-on self [ happy? = False ] [
-          set unhappy-neighbours sentence unhappy-neighbours self
-        ]
-      ]
-      if length unhappy-neighbours > 0 [
-        let new_patch one-of unhappy-neighbours
-        ask turtles-on new_patch [
-          move-to patch-here
-        ]
-        move-to new_patch
-      ]
-    ]
-  
-]   
+  let unhappypeople people with [happy? = False]
+  ask unhappypeople [
+    set partner one-of other unhappypeople
+    show partner
+    let currentpos patch-here
+    let newpos [patch-here] of partner
+    move-to newpos
+    ask partner [ move-to currentpos ]
+  ]
 end
+
 
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -137,7 +131,7 @@ SLIDER
 %similar
 0
 100
-22
+50
 1
 1
 NIL

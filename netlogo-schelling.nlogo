@@ -71,9 +71,9 @@ GRAPHICS-WINDOW
 210
 10
 455
-134
-2
-2
+245
+5
+5
 18.7
 1
 10
@@ -84,10 +84,10 @@ GRAPHICS-WINDOW
 1
 0
 1
--2
-2
--2
-2
+-5
+5
+-5
+5
 1
 1
 1
@@ -137,7 +137,7 @@ SLIDER
 %similar
 0
 100
-64
+50
 1
 1
 NIL
@@ -167,20 +167,9 @@ MONITOR
 135
 99
 188
-red people
-count people with [color = red]
-17
-1
-13
-
-MONITOR
-104
-135
-204
-188
-green people
-count people with [color = green]
-17
+red %
+count people with [color = red] / count people * 100
+2
 1
 13
 
@@ -189,9 +178,9 @@ MONITOR
 195
 116
 248
-happy people
-count people with [happy? = True]
-17
+happy %
+count people with [happy? = True] / count people * 100
+2
 1
 13
 

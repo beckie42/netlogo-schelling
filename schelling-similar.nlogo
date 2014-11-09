@@ -64,6 +64,10 @@ to move-unhappy-people
   let unhappypeople people with [happy? = False]
   ask unhappypeople [
     let partner one-of other unhappypeople
+    
+    if move-method = "neighbours"
+      [ set partner one-of turtles-on neighbors ]
+    
     let currentpos patch-here
     let newpos [patch-here] of partner
     move-to newpos
@@ -239,6 +243,16 @@ NIL
 NIL
 NIL
 1
+
+CHOOSER
+224
+73
+362
+118
+move-method
+move-method
+"any" "neighbours"
+0
 
 @#$#@#$#@
 ## WHAT IS IT?

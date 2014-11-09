@@ -9,10 +9,13 @@ people-own [
 globals [
   equilibrium?
   recording?
+  moves
 ]
 
 to setup
   clear-all
+  set equilibrium? False
+  set moves 0
   setup-people
   update-people
   reset-ticks
@@ -29,7 +32,7 @@ to setup-people
   let population (max-pxcor * 2 + 1) * (max-pycor * 2 + 1)
   ask n-of population patches [sprout-people 1 
     [
-      set shape "person"
+      set shape "circle"
       set resources random-normal 0 20
       ifelse resources >= 0
         [ set color red ]
@@ -45,9 +48,11 @@ to update-people
     set similar (count neighbours with [color = matchcolor]) / (count neighbours) * 100.0
     ifelse similar >= %similar 
       [ set happy? True 
-        set shape "face happy"]
+;        set shape "face happy"
+        ]
       [ set happy? False
-        set shape "face sad" ]
+;        set shape "face sad" 
+        ]
   ]
   let unhappypeople people with [happy? = False]
   ifelse all? unhappypeople [color = red] or all? unhappypeople [color = green]
@@ -63,6 +68,7 @@ to move-unhappy-people
     let newpos [patch-here] of partner
     move-to newpos
     ask partner [ move-to currentpos ]
+    set moves moves + 1
   ]
 end
 
@@ -71,8 +77,13 @@ to record-movie
   set recording? True
   movie-start "C:/Users/Rebecca/Dropbox/NetLogo 5.1.0 - Win/Beckie's models/exports/schelling.mov"
   movie-grab-view
+  movie-grab-view
+  movie-grab-view
   while [ equilibrium? = False ]
-    [ go ]
+    [ go
+      if moves mod 3 = 0 
+        [ movie-grab-view ]
+    ]
   movie-close
   set recording? False
 end
@@ -333,6 +344,15 @@ false
 Circle -7500403 true true 0 0 300
 Circle -16777216 true false 30 30 240
 
+cloud
+false
+0
+Circle -7500403 true true 13 118 94
+Circle -7500403 true true 86 101 127
+Circle -7500403 true true 51 51 108
+Circle -7500403 true true 118 43 95
+Circle -7500403 true true 158 68 134
+
 cow
 false
 0
@@ -489,6 +509,19 @@ star
 false
 0
 Polygon -7500403 true true 151 1 185 108 298 108 207 175 242 282 151 216 59 282 94 175 3 108 116 108
+
+sun
+false
+0
+Circle -7500403 true true 75 75 150
+Polygon -7500403 true true 300 150 240 120 240 180
+Polygon -7500403 true true 150 0 120 60 180 60
+Polygon -7500403 true true 150 300 120 240 180 240
+Polygon -7500403 true true 0 150 60 120 60 180
+Polygon -7500403 true true 60 195 105 240 45 255
+Polygon -7500403 true true 60 105 105 60 45 45
+Polygon -7500403 true true 195 60 240 105 255 45
+Polygon -7500403 true true 240 195 195 240 255 255
 
 target
 false

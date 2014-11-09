@@ -8,6 +8,7 @@ people-own [
 
 globals [
   equilibrium?
+  recording?
 ]
 
 to setup
@@ -65,15 +66,25 @@ to move-unhappy-people
   ]
 end
 
+to record-movie
+  setup
+  set recording? True
+  movie-start "C:/Users/Rebecca/Dropbox/NetLogo 5.1.0 - Win/Beckie's models/exports/schelling.mov"
+  movie-grab-view
+  while [ equilibrium? = False ]
+    [ go ]
+  movie-close
+  set recording? False
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 428
 10
-829
-432
-10
-10
-18.7
+1246
+849
+50
+50
+8.0
 1
 10
 1
@@ -83,10 +94,10 @@ GRAPHICS-WINDOW
 1
 0
 1
--10
-10
--10
-10
+-50
+50
+-50
+50
 1
 1
 1
@@ -200,6 +211,23 @@ false
 "" ""
 PENS
 "% similar" 1.0 0 -13345367 true "" "plot mean [similar] of people"
+
+BUTTON
+199
+20
+270
+53
+movie
+record-movie
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?

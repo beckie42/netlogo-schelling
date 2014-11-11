@@ -43,31 +43,50 @@ to setup-people
       set shape "circle"
       set resources random-normal 0 20
       ifelse resources >= 0
-        [ set resources-sign "+"
-          set color [82 0 99] ]
-        [ set resources-sign "-"
-          set color white ]
+         [ set resources-sign "+" ]
+         [ set resources-sign "-" ]
+      
+      ifelse binary?
+        [ ifelse resources-sign = "+"
+          [ set color [82 0 99] ]
+          [ set color white ]
+        ]
+        [ let c (resources + 75) / 150
+          if c != 1 and c != 0 and c != 0.5 and c > 0 and c < 1
+            [ ifelse c > 0.5
+              [ set c (1 - (1 - c) ^ 1.5) ]
+              [ set c c ^ 1.5 ]
+            ]
+          let r median (list 255 (255 - (255 - 82) * c) 82)
+          let g median (list 255 (225 - (255 - 0) * c) 0)
+          let b median (list 255 (255 - (255 - 82) * c) 99)
+          set color (list r g b)
+        ]
     ]
   ]
 end
   
 to update-people
   ask people [
-    let matchcolor [color] of self
+    let matchsign [resources-sign] of self
     let neighbours (turtles-on neighbors)
-    set similar (count neighbours with [color = matchcolor]) / (count neighbours) * 100.0
-    ifelse similar >= %similar 
-      [ set happy? True 
-;        set shape "face happy"
-        ]
-      [ set happy? False
-;        set shape "face sad" 
-        ]
+    set similar (count neighbours with [resources-sign = matchsign]) / (count neighbours) * 100.0
+    
+    ifelse binary?
+      [ 
+        ifelse similar >= %similar 
+        [ set happy? True ]
+        [ set happy? False ]
+      ]
+      [ ifelse abs (([resources] of self) - (mean [resources] of turtles-on neighbors)) <= 5
+        [ set happy? True ]
+        [ set happy? False ]
+      ]
   ]
-  let unhappypeople people with [happy? = False]
-  ifelse all? unhappypeople [resources-sign = "-"] or all? unhappypeople [resources-sign = "+"]
-    [ set equilibrium? True ]
-    [ set equilibrium? False ]
+;  let unhappypeople people with [happy? = False]
+;  ifelse all? unhappypeople [resources-sign = "-"] or all? unhappypeople [resources-sign = "+"]
+;    [ set equilibrium? True ]
+;    [ set equilibrium? False ]
 end
 
 to move-unhappy-people
@@ -132,10 +151,10 @@ end
 GRAPHICS-WINDOW
 428
 10
-1246
-849
-50
-50
+766
+369
+20
+20
 8.0
 1
 10
@@ -146,10 +165,10 @@ GRAPHICS-WINDOW
 1
 0
 1
--50
-50
--50
-50
+-20
+20
+-20
+20
 1
 1
 1
@@ -312,7 +331,7 @@ MONITOR
 86
 319
 + happy
-count people with [resources-sign = \"+\" and happy? = False]
+count people with [resources-sign = \"+\" and happy? = True]
 0
 1
 13
@@ -323,10 +342,21 @@ MONITOR
 158
 319
 - happy
-count people with [resources-sign = \"-\" and happy? = False]
+count people with [resources-sign = \"-\" and happy? = True]
 0
 1
 13
+
+SWITCH
+245
+205
+349
+238
+binary?
+binary?
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?

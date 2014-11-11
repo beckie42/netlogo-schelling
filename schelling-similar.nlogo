@@ -32,7 +32,7 @@ to go
   set end-happy count people with [happy? = True]
   update-equilibrium
   tick
-;  export-view (word "schelling" (word ticks ".png")) 
+  export-view (word "schellingwithin4" (word ticks ".png")) 
 ;  "C:/Users/Rebecca/Dropbox/NetLogo 5.1.0 - Win/Beckie's models/exports"
 end
 
@@ -300,7 +300,7 @@ move-distance
 move-distance
 0
 10
-6
+4
 1
 1
 NIL

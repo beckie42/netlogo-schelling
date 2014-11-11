@@ -4,12 +4,15 @@ people-own [
   resources
   similar
   happy?
+  resources-sign
 ]
 
 globals [
   equilibrium?
   recording?
   moves
+  start-happy
+  end-happy
 ]
 
 to setup
@@ -23,9 +26,14 @@ end
 
 to go
   if equilibrium? [stop]
+  set start-happy count people with [happy? = True]
   move-unhappy-people
   update-people
+  set end-happy count people with [happy? = True]
+  update-equilibrium
   tick
+;  export-view (word "schelling" (word ticks ".png")) 
+;  "C:/Users/Rebecca/Dropbox/NetLogo 5.1.0 - Win/Beckie's models/exports"
 end
 
 to setup-people
@@ -35,8 +43,10 @@ to setup-people
       set shape "circle"
       set resources random-normal 0 20
       ifelse resources >= 0
-        [ set color red ]
-        [ set color green ]
+        [ set resources-sign "+"
+          set color [82 0 99] ]
+        [ set resources-sign "-"
+          set color white ]
     ]
   ]
 end
@@ -55,7 +65,7 @@ to update-people
         ]
   ]
   let unhappypeople people with [happy? = False]
-  ifelse all? unhappypeople [color = red] or all? unhappypeople [color = green]
+  ifelse all? unhappypeople [resources-sign = "-"] or all? unhappypeople [resources-sign = "+"]
     [ set equilibrium? True ]
     [ set equilibrium? False ]
 end
@@ -63,17 +73,44 @@ end
 to move-unhappy-people
   let unhappypeople people with [happy? = False]
   ask unhappypeople [
-    let partner one-of other unhappypeople
+    let partner one-of people
+    
+    if move-method = "any"
+      [ let matchsign [resources-sign] of self
+        set partner one-of other unhappypeople with [resources-sign != matchsign]
+      ]
     
     if move-method = "neighbours"
-      [ set partner one-of turtles-on neighbors ]
+      [ foreach [self] of neighbors
+        [ let p one-of turtles-on ?
+          if [resources-sign] of p != [resources-sign] of self and [happy?] of p = False
+          [ set partner p ]
+        ]
+      ]
+      
+    if move-method = "withindistance"
+      [ let near patches in-radius move-distance 
+        foreach [self] of near
+        [ let p one-of turtles-on ?
+          if [resources-sign] of p != [resources-sign] of self and [happy?] of p = False
+          [ set partner p ]
+        ]
+      ]
     
-    let currentpos patch-here
-    let newpos [patch-here] of partner
-    move-to newpos
-    ask partner [ move-to currentpos ]
-    set moves moves + 1
+    if partner != nobody  
+      [ let currentpos patch-here
+        let newpos [patch-here] of partner
+        move-to newpos
+        ask partner [ move-to currentpos ]
+        set moves moves + 1
+      ]
   ]
+  
+end
+
+to update-equilibrium
+  if start-happy = end-happy and (count people with [happy? = True] / count people >= .98)
+    [set equilibrium? True ]
 end
 
 to record-movie
@@ -193,7 +230,7 @@ MONITOR
 99
 188
 red %
-count people with [color = red] / count people * 100
+count people with [resources-sign = \"-\"] / count people * 100
 2
 1
 13
@@ -247,12 +284,49 @@ NIL
 CHOOSER
 224
 73
-362
+366
 118
 move-method
 move-method
-"any" "neighbours"
+"any" "neighbours" "withindistance"
 0
+
+SLIDER
+197
+134
+369
+167
+move-distance
+move-distance
+0
+10
+6
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+20
+266
+86
+319
++ happy
+count people with [resources-sign = \"+\" and happy? = False]
+0
+1
+13
+
+MONITOR
+95
+266
+158
+319
+- happy
+count people with [resources-sign = \"-\" and happy? = False]
+0
+1
+13
 
 @#$#@#$#@
 ## WHAT IS IT?

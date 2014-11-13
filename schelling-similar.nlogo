@@ -22,17 +22,19 @@ to setup
   setup-people
   update-people
   reset-ticks
+  export-view (word "schelling" (word ticks ".png"))
 end
 
 to go
-  if equilibrium? [stop]
+;  if equilibrium? [stop]
+  if ticks = 101 [stop]
   set start-happy count people with [happy? = True]
   move-unhappy-people
   update-people
   set end-happy count people with [happy? = True]
   update-equilibrium
   tick
-  export-view (word "schellingwithin4" (word ticks ".png")) 
+  export-view (word "schelling" (word ticks ".png")) 
 ;  "C:/Users/Rebecca/Dropbox/NetLogo 5.1.0 - Win/Beckie's models/exports"
 end
 
@@ -151,10 +153,10 @@ end
 GRAPHICS-WINDOW
 428
 10
-766
-369
-20
-20
+1246
+849
+50
+50
 8.0
 1
 10
@@ -165,10 +167,10 @@ GRAPHICS-WINDOW
 1
 0
 1
--20
-20
--20
-20
+-50
+50
+-50
+50
 1
 1
 1
@@ -308,7 +310,7 @@ CHOOSER
 move-method
 move-method
 "any" "neighbours" "withindistance"
-0
+2
 
 SLIDER
 197
@@ -354,7 +356,7 @@ SWITCH
 238
 binary?
 binary?
-1
+0
 1
 -1000
 
